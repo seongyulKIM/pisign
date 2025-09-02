@@ -1,13 +1,33 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PiSign</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <h1>PiSign</h1>
+    <p>파이 기반 서명 플랫폼</p>
+    <button onclick="signIn()">Pi Wallet 로그인</button>
+
+    <script>
+      window.Pi.init({ version: "2.0", sandbox: true });
+
+      function onIncompletePaymentFound(payment) {
+        console.warn("미처리 결제:", payment);
+      }
+
+      async function signIn() {
+        try {
+          const scopes = ["username", "payments"];
+          const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+          alert("로그인 성공: " + result.user.username);
+          console.log("성공:", result);
+        } catch (err) {
+          alert("로그인 실패");
+          console.error("에러:", err);
+        }
+      }
+    </script>
   </body>
 </html>
